@@ -1,6 +1,6 @@
 services:
   backend:
-    image: frappe/erpnext:v16.34.2
+    image: daimbk/frappe-custom:1.0.0
     networks:
       - frappe_network
     deploy:
@@ -12,14 +12,14 @@ services:
     environment:
       DB_HOST: db
       DB_PORT: "3306"
-      MYSQL_ROOT_PASSWORD: admin
-      MARIADB_ROOT_PASSWORD: admin
+      MYSQL_ROOT_PASSWORD: accbccdcc
+      MARIADB_ROOT_PASSWORD: accbccdcc
     depends_on:
       configurator:
         condition: service_completed_successfully
 
   configurator:
-    image: frappe/erpnext:v16.34.2
+    image: daimbk/frappe-custom:1.0.0
     networks:
       - frappe_network
     deploy:
@@ -48,7 +48,7 @@ services:
       - logs:/home/frappe/frappe-bench/logs
 
   create-site:
-    image: frappe/erpnext:v16.34.2
+    image: daimbk/frappe-custom:1.0.0
     networks:
       - frappe_network
     deploy:
@@ -78,10 +78,10 @@ services:
           fi
         done;
         echo "sites/common_site_config.json found";
-        if [ -d "sites/frontend" ]; then
-          echo "Site frontend already exists, skipping creation";
+        if [ -d "sites/frappe.envipro-solutions.com" ]; then
+          echo "Site frappe.envipro-solutions.com already exists, skipping creation";
         else
-          bench new-site --mariadb-user-host-login-scope='%' --admin-password=admin --db-root-username=root --db-root-password=admin --install-app erpnext --set-default frontend;
+          bench new-site --mariadb-user-host-login-scope='%' --admin-password=accbccdcc --db-root-username=root --db-root-password=accbccdcc --install-app erpnext --install-app crm --set-default frappe.envipro-solutions.com;
         fi;
 
   db:
@@ -102,13 +102,13 @@ services:
       - --collation-server=utf8mb4_unicode_ci
       - --skip-character-set-client-handshake
     environment:
-      MYSQL_ROOT_PASSWORD: admin
-      MARIADB_ROOT_PASSWORD: admin
+      MYSQL_ROOT_PASSWORD: accbccdcc
+      MARIADB_ROOT_PASSWORD: accbccdcc
     volumes:
       - db-data:/var/lib/mysql
 
   frontend:
-    image: frappe/erpnext:v16.34.2
+    image: daimbk/frappe-custom:1.0.0
     networks:
       - frappe_network
     depends_on:
@@ -120,9 +120,9 @@ services:
     command:
       - nginx-entrypoint.sh
     environment:
-      BACKEND: backend:8000
-      FRAPPE_SITE_NAME_HEADER: frontend
-      SOCKETIO: websocket:9000
+      BACKEND: frappe-envipropak-koxmki-backend-1:8000
+      FRAPPE_SITE_NAME_HEADER: frappe.envipro-solutions.com
+      SOCKETIO: frappe-envipropak-koxmki-websocket-1:9000
       UPSTREAM_REAL_IP_ADDRESS: 127.0.0.1
       UPSTREAM_REAL_IP_HEADER: X-Forwarded-For
       UPSTREAM_REAL_IP_RECURSIVE: "off"
@@ -135,7 +135,7 @@ services:
       - "8080:8080"
 
   queue-long:
-    image: frappe/erpnext:v16.34.2
+    image: daimbk/frappe-custom:1.0.0
     networks:
       - frappe_network
     deploy:
@@ -157,7 +157,7 @@ services:
         condition: service_completed_successfully
 
   queue-short:
-    image: frappe/erpnext:v16.34.2
+    image: daimbk/frappe-custom:1.0.0
     networks:
       - frappe_network
     deploy:
@@ -197,7 +197,7 @@ services:
         condition: on-failure
 
   scheduler:
-    image: frappe/erpnext:v16.34.2
+    image: daimbk/frappe-custom:1.0.0
     networks:
       - frappe_network
     deploy:
@@ -214,7 +214,7 @@ services:
         condition: service_completed_successfully
 
   websocket:
-    image: frappe/erpnext:v16.34.2
+    image: daimbk/frappe-custom:1.0.0
     networks:
       - frappe_network
     deploy:
